@@ -19,8 +19,8 @@ class Graph {
 
   // this function accepts an array of Node instances and adds them to the nodes property on the graph
   addVertices(vertexArray) {
-    vertexArray.forEach(vertex => this.addVertex(vertex));
-    
+    vertexArray.forEach((vertex) => this.addVertex(vertex));
+
     return this;
   }
 
@@ -44,15 +44,15 @@ class Graph {
   removeVertex(vertex) {
     this.nodes.delete(vertex);
 
-    this.nodes.forEach(node => node.adjacent.delete(vertex));
+    this.nodes.forEach((node) => node.adjacent.delete(vertex));
 
     return this;
   }
 
   // this function returns an array of Node values using DFS
   depthFirstSearch(start) {
-    const visited = new Set();
-    const result = [];
+    let visited = new Set();
+    let result = [];
 
     function traverse(vertex) {
       if (!vertex) return null;
@@ -60,7 +60,7 @@ class Graph {
       visited.add(vertex);
       result.push(vertex.value);
 
-      vertex.adjacent.forEach(neighbor => {
+      vertex.adjacent.forEach((neighbor) => {
         if (!visited.has(neighbor)) {
           return traverse(neighbor);
         }
@@ -73,7 +73,22 @@ class Graph {
   }
 
   // this function returns an array of Node values using BFS
-  breadthFirstSearch(start) {}
+  breadthFirstSearch(start) {
+    let toVisitQueue = [start];
+    let seen = new Set(toVisitQueue);
+
+    while (toVisitQueue.length > 0) {
+      let current = toVisitQueue.shift();
+      current.adjacent.forEach((neighbor) => {
+        if (!seen.has(neighbor)) {
+          seen.add(neighbor);
+          toVisitQueue.push(neighbor);
+        }
+      });
+    }
+
+    return Array.from(seen).map((node) => node.value);
+  }
 }
 
-module.exports = {Graph, Node}
+module.exports = { Graph, Node };
